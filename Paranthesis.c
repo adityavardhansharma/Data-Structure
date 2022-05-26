@@ -1,96 +1,86 @@
-#include <stdio.h>
-#include <stdlib.h>
-#define b int
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define MAX 20
 
-
-struct s {char data;struct s* next;};
-void push(struct s** t, int new_data);
-int pop(struct s** t);
-
-b isMatchingPair(char character1, char character2)
+struct stack
 {
-	if (character1 == '(' && character2 == ')')
-		return 1;
-	else if (character1 == '{' && character2 == '}')
-		return 1;
-	else if (character1 == '[' && character2 == ']')
-		return 1;
-	else
-		return 0;
+char stk[MAX];
+int top;
+}s;
+
+
+void push(char item)
+{
+if (s.top == (MAX - 1))
+printf ("Stack is Full\n");
+else
+{
+s.top = s.top + 1; // Push the char and increment top
+s.stk[s.top] = item;
+}}
+
+void pop()
+{
+if (s.top == - 1)
+{
+printf ("Stack is Empty\n");
 }
-
-b areBracketsBalanced(char exp[])
-{	int i = 0;
-
-	struct s* stack = NULL;
-
-	while (exp[i])
-	{
-	if (exp[i] == '{' || exp[i] == '(' || exp[i] == '[')
-		push(&stack, exp[i]);
-    if (exp[i] == '}' || exp[i] == ')'
-			|| exp[i] == ']') {
-	if (stack == NULL)
-				return 0;
-	else if (!isMatchingPair(pop(&stack), exp[i]))
-				return 0;
-			    
-			}
-	i++;
-	}
-
-	if (stack == NULL)
-		return 1; 
-	else
-		return 0; 
-}
-
+else
+{
+s.top = s.top - 1; // Pop the char and decrement top
+}}
 
 int main()
 {
-	char exp[100] = "{()}[]";
-
-	
-	if (areBracketsBalanced(exp))
-		printf("Balanced \n");
-	else
-		printf("Not Balanced \n");
-	return 0;
-}
-
-void push(struct s** t, int new_data)
+char exp[MAX];
+int i = 0;
+s.top = -1;
+printf("\nINPUT THE EXPRESSION : ");
+scanf("%s", exp);
+for(i = 0;i < strlen(exp);i++)
 {
-	
-	struct s* n
-		= (struct s*)malloc(sizeof(struct s));
-
-	if (n == NULL) {
-		printf("Stack overflow n");
-		getchar();
-		exit(0);
-	}
-n->data = new_data;
-n->next = (*t);
-(*t) = n;
-}
- 
-int pop(struct s** t)
+if(exp[i] == '(' || exp[i] == '[' || exp[i] == '{')
 {
-	char r;
-	struct s* top;
-
-	if (*t == NULL) {
-		printf("Stack overflow n");
-		getchar();
-		exit(0);
-	}
-	else {
-		top = *t;
-		r = top->data;
-		*t = top->next;
-		free(top);
-		return r;
-	}
-
+push(exp[i]); // Push the open bracket
+continue;
 }
-
+else if(exp[i] == ')' || exp[i] == ']' || exp[i] == '}') // If a closed bracket is encountered
+{
+if(exp[i] == ')')
+{
+if(s.stk[s.top] == '(')
+{
+pop(); // Pop the stack until closed bracket is found
+}
+else
+{
+printf("\nUNBALANCED EXPRESSION\n");
+break;
+}}
+if(exp[i] == ']')
+{
+if(s.stk[s.top] == '[')
+{
+pop(); // Pop the stack until closed bracket is found
+}
+else
+{
+printf("\nUNBALANCED EXPRESSION\n");
+break;
+}}
+if(exp[i] == '}')
+{
+if(s.stk[s.top] == '{')
+{
+pop(); // Pop the stack until closed bracket is found
+}
+else
+{
+printf("\nUNBALANCED EXPRESSION\n");
+break;
+}}}}
+if(s.top == -1)
+{
+printf("\nBALANCED EXPRESSION\n"); // Finally if the stack is empty, display that the expression is balanced
+}}
